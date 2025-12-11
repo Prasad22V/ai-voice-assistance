@@ -14,7 +14,7 @@ const VapiWidget = () => {
   const [callEnded, setCallEnded] = useState(false);
 
   const { user, isLoaded } = useUser();
-  console.log(user);
+ 
 
   const messageContainerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -39,6 +39,7 @@ const VapiWidget = () => {
       setIsSpeaking(false);
 
       setCallEnded(true);
+      
     };
     const handleSpeechStart = () => {
       console.log("Speech started");
