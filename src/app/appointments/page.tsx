@@ -13,6 +13,7 @@ import BookingConfirmationStep from "@/components/appointments/BookingConfirmati
 import { toast } from "sonner";
 import { APPOINTMENT_TYPES } from "@/lib/utils";
 import { format } from "date-fns";
+import AppointmentConfirmationModal from "@/components/appointments/AppointmentConfirmationModal";
 
 function AppointmentPage() {
   const [selectedDentistId, setSelectedDentistId] = useState<string | null>(
@@ -53,6 +54,34 @@ function AppointmentPage() {
       {
         onSuccess: async (appointment) => {
           setBookedAppointment(appointment);
+          try {
+            const emailResponse = await fetch("/api/send-appointment-email", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userEmail: appointment.patientEmail,
+                doctorName: appointment.doctorName,
+                appointmentDate: format(
+                  new Date(appointment.date),
+                  "EEEE, MMMM d, yyyy"
+                ),
+                appointmentTime: appointment.time,
+                appointmentType: appointmentType?.name,
+                duration: appointmentType?.duration,
+                price: appointmentType?.price,
+              }),
+            });
+            if (!emailResponse.ok) {
+              throw new Error("Failed to send appointment confirmation email");
+            }
+          } catch (error) {
+            console.error(
+              "Error sending appointment confirmation email",
+              error
+            );
+          }
           setShowConfirmationModel(true);
           setSelectedDentistId(null);
           setSelectedDate("");
@@ -113,13 +142,34 @@ function AppointmentPage() {
         )}
       </div>
 
+      {bookedAppointment && (
+        <AppointmentConfirmationModal
+          open={showConfirmationModel}
+          onOpenChange={setShowConfirmationModel}
+          appointmentDetails={{
+            doctorName: bookedAppointment.doctorName,
+            appointmentDate: format(
+              new Date(bookedAppointment.date),
+              "EEEE, MMMM d, yyyy"
+            ),
+            appointmentTime: bookedAppointment.time,
+            userEmail: bookedAppointment.patientEmail,
+          }}
+        />
+      )}
+
       {/* user appoitments */}
-       {userAppointments.length > 0 && (
+      {userAppointments.length > 0 && (
         <div className="mb-8 max-w-7xl mx-auto px-6 py-8">
-          <h2 className="text-xl font-semibold mb-4">Your Upcoming Appointments</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            Your Upcoming Appointments
+          </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {userAppointments.map((appointment) => (
-              <div key={appointment.id} className="bg-card border rounded-lg p-4 shadow-sm">
+              <div
+                key={appointment.id}
+                className="bg-card border rounded-lg p-4 shadow-sm"
+              >
                 <div className="flex items-center gap-3 mb-3">
                   <div className="size-10 bg-primary/10 rounded-full flex items-center justify-center">
                     <img
@@ -129,8 +179,12 @@ function AppointmentPage() {
                     />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">{appointment.doctorName}</p>
-                    <p className="text-muted-foreground text-xs">{appointment.reason}</p>
+                    <p className="font-medium text-sm">
+                      {appointment.doctorName}
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      {appointment.reason}
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-1 text-sm">
