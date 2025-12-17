@@ -47,3 +47,60 @@ export const formatPhoneNumber = (value: string) => {
   // For extra-long numbers, still try to format first 12 digits
   return `+${phone.slice(0, 2)} ${phone.slice(2, 7)} ${phone.slice(7, 12)}`;
 };
+
+export const getNext5Days = () => {
+  const dates = [];
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  for (let i = 0; i < 5; i++) {
+    const date = new Date(tomorrow);
+    date.setDate(date.getDate() + i);
+    dates.push(date.toISOString().split("T")[0]);
+  }
+  return dates;
+};
+
+export const getAvailableTimeSlots = () => {
+  return [
+    "09:00",
+    "9:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+  ];
+};
+
+export const APPOINTMENT_TYPES = [
+  {
+    id: " Checkup",
+    name: "Regular Checkup",
+    duration: "60 min",
+    price: "$100",
+  },
+  {
+    id: "cleaning",
+    name: "Teeth Cleaning",
+    duration: "30 min",
+    price: "$80",
+  },
+  {
+    id: "consultation",
+    name: "Consultation",
+    duration: "30 min",
+    price: "$50",
+  },
+  {
+    id: "emergency",
+    name: "Emergency",
+    duration: "30 min",
+    price: "$150",
+  },
+];

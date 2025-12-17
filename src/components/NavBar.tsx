@@ -36,9 +36,9 @@ const NavBar = () => {
               <span className="hidden md:inline">Dashboard</span>
             </Link>
             <Link
-              href="/dashboard/appointments"
+              href="/appointments"
               className={`flex items-center gap-2 transition-colors ${
-                pathname === "/dashboard/appointments"
+                pathname === "/appointments"
                   ? "text-foreground hover:text-primary font-medium"
                   : "text-muted-foreground hover:text-foreground"
               }`}
