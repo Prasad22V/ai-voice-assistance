@@ -8,13 +8,14 @@ import { Settings2Icon } from "lucide-react";
 import React from "react";
 import AdminStats from "@/components/admin/AdminStats";
 import DoctorsManagement from "@/components/admin/DoctorsManagement";
+import RecentAppointments from "@/components/admin/RecentAppointments";
 
 const AdminDashbClient = () => {
   const { user } = useUser();
   const { data: doctors = [], isLoading: doctorsLoading } = useGetDoctors();
   const { data: appoitments = [], isLoading: appoitmentsLoading } =
     useGetAppoitments();
-  console.log({ doctors, appoitments });
+
   const stats = {
     totalDoctors: doctors.length,
     activeDoctors: doctors.filter((doctor) => doctor.isActive).length,
@@ -62,6 +63,7 @@ const AdminDashbClient = () => {
           completedAppoitments={stats.completedAppoitments}
         />
         <DoctorsManagement />
+        <RecentAppointments />
       </div>
     </div>
   );

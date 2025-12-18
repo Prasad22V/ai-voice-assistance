@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import prisma from "../prisma";
+import { AppoitmentStatus } from "@prisma/client";
 
 function transformAppointment(appointment: any) {
   return {
@@ -38,7 +39,7 @@ export async function getAppoitments() {
         createdAt: "desc",
       },
     });
-    return appoitments;
+    return appoitments.map(transformAppointment);
   } catch (error) {
     console.log("error getting appoitments", error);
     throw new Error("Failed to get appoitments");
@@ -179,5 +180,21 @@ export async function bookAppointment(input: BookAppointmentInput) {
   } catch (error) {
     console.log("error booking appointment", error);
     throw new Error("Failed to book appointment");
+  }
+}
+
+export async function updateAppointmentStatus(input: {
+  id: string;
+  status: AppoitmentStatus;
+}) {
+  try {
+    const appoitment = await prisma.appoitment.update({
+      where: { id: input.id },
+      data: { status: input.status },
+    });
+    return appoitment;
+  } catch (error) {
+    console.log("error updating appointment status", error);
+    throw new Error("Failed to update appointment status");
   }
 }
