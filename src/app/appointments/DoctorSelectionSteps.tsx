@@ -1,3 +1,4 @@
+import { DoctorCardsLoading } from "@/components/appointments/DoctorCardsLoading";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { DoctorCardsLoading } from "@/components/appointments/DoctorCardsLoading";
 import { useAvailableDoctors } from "@/hooks/use-doctors";
 import { MapPinIcon, PhoneIcon, StarIcon } from "lucide-react";
 import Image from "next/image";
@@ -84,7 +84,7 @@ function DoctorSelectionSteps({
                 {dentist.bio ||
                   "Experianced dental professional providing quality care"}
               </p>
-              <Badge variant="outline">Licensed Professional</Badge>
+              <Badge variant="default">Licensed Professional</Badge>
             </CardContent>
           </Card>
         ))}
